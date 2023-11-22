@@ -3,3 +3,4 @@ members = [
     "miden-raptor/contract",
     "miden-raptor/proving-system"
 ]
+resolver = "2"
