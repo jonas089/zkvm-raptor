@@ -20,6 +20,8 @@ use casper_types::{
     Parameter, RuntimeArgs, URef, U256, ContractPackage, ContractPackageHash
 };
 use miden::{Assembler, DefaultHost, ProvingOptions, StackInputs, ExecutionProof, ProgramInfo, StackOutputs};
+mod error;
+use error::MidenError;
 
 #[no_mangle]
 pub extern "C" fn verify(){
@@ -40,7 +42,7 @@ pub extern "C" fn verify(){
         },
         // replace with custom error
         Err(_) => {
-            runtime::revert(ApiError::InvalidArgument);
+            runtime::revert(MidenError::InvalidProof);
             //runtime::print("[Err] Execution proof was NOT verified!");
         }
     };
