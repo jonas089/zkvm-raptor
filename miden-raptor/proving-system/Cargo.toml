@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 miden-vm = "0.7.0"
+winter-utils = "0.7.0"

@@ -19,22 +19,26 @@ use casper_types::{
     CLTyped, ContractHash, EntryPoint, EntryPointAccess, EntryPointType, EntryPoints, Key,
     Parameter, RuntimeArgs, URef, U256, ContractPackage, ContractPackageHash
 };
-use miden::{Assembler, DefaultHost, ProvingOptions, StackInputs, ExecutionProof, ProgramInfo, StackOutputs};
+use miden_verifier::{StackInputs, ExecutionProof, ProgramInfo, StackOutputs, Kernel, Digest};
 mod error;
 use error::MidenError;
+use winter_utils::{Serializable, Deserializable};
 
 #[no_mangle]
 pub extern "C" fn verify(){
     // parse serialized inputs
     let proof_serialized: Vec<u8> = runtime::get_named_arg("proof");
     let outputs_stack: Vec<u64> = runtime::get_named_arg("outputs");
-    let program_string: String = runtime::get_named_arg("program");
+    let program_info_serialized: Vec<u8> = runtime::get_named_arg("kernel_hashes");
     // deserialize verifier inputs
-    let program: miden::Program = Assembler::default().compile(program_string).unwrap();
+    // let program: Program = Assembler::default().compile(program_string).unwrap();
     let outputs: StackOutputs = StackOutputs::new(outputs_stack, Vec::new()).unwrap();
     let proof: ExecutionProof = ExecutionProof::from_bytes(&proof_serialized).unwrap();
+
+    let program_info: ProgramInfo = ProgramInfo::read_from_bytes(&program_info_serialized).unwrap();
+
     // run verifier
-    let is_valid: Result<u32, miden::VerificationError> = miden::verify(ProgramInfo::from(program), StackInputs::try_from_values([0, 1]).unwrap(),outputs,  proof);
+    let is_valid: Result<u32, miden_verifier::VerificationError> = miden_verifier::verify(program_info, StackInputs::try_from_values([0, 1]).unwrap(),outputs,  proof);
     match is_valid{
         Ok(_) => {
             
