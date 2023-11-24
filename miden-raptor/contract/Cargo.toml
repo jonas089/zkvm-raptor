@@ -7,8 +7,8 @@ edition = "2021"
 base64 = { version = "0.13.0", default-features = false, features = ["alloc"] }
 casper-contract = { version = "4.0.0", default-features = false, features = ["test-support"]}
 casper-types = "4.0.0"
-miden-verifier = { version = "=0.7.0", default-features = false }
-winter-utils = {verison = "=0.7.0" }
+miden-verifier = { version = "=0.6.0", default-features = false }
+winter-utils = { verison = "=0.7.0" }
 
 [[bin]]
 name = "contract"

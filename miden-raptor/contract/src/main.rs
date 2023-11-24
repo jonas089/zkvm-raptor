@@ -19,7 +19,7 @@ use casper_types::{
     CLTyped, ContractHash, EntryPoint, EntryPointAccess, EntryPointType, EntryPoints, Key,
     Parameter, RuntimeArgs, URef, U256, ContractPackage, ContractPackageHash
 };
-use miden_verifier::{StackInputs, ExecutionProof, ProgramInfo, StackOutputs, Kernel, Digest};
+use miden_verifier::{StackInputs, ExecutionProof, ProgramInfo, StackOutputs};
 mod error;
 use error::MidenError;
 use winter_utils::{Serializable, Deserializable};
@@ -76,7 +76,7 @@ pub extern "C" fn verify(){
 
 
     // let program: Program = Assembler::default().compile(program_string).unwrap();
-    let outputs: StackOutputs = StackOutputs::new(outputs_stack, Vec::new()).unwrap();
+    let outputs: StackOutputs = StackOutputs::new(outputs_stack, Vec::new());
     let proof: ExecutionProof = ExecutionProof::from_bytes(&proof_serialized).unwrap();
 
     let program_info: ProgramInfo = ProgramInfo::read_from_bytes(&program_info_serialized).unwrap();
