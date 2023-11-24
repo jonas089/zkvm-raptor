@@ -159,8 +159,8 @@ dependencies = [
  "base64",
  "casper-contract",
  "casper-types",
+ "miden-core",
  "miden-verifier",
- "winter-utils",
 ]
 
 [[package]]
@@ -352,6 +352,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "glob"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b"
+
+[[package]]
 name = "group"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -418,9 +424,9 @@ checksum = "89d92a4743f9a61002fae18374ed11e7973f530cb3a3255fb354818118b2203c"
 
 [[package]]
 name = "miden-air"
-version = "0.6.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "670ef3cdd4766c4ff385796ada3d3ba1052cab54e602741b04a02d3a0343c173"
+checksum = "5fa086b50e9fc3f808e171cb69f81fe464efbc01f996df3db0e450caaf070749"
 dependencies = [
  "miden-core",
  "winter-air",
@@ -428,9 +434,9 @@ dependencies = [
 
 [[package]]
 name = "miden-core"
-version = "0.6.1"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "de6b8e46b1acc1cc3a2d8d6ab976ab44537c84a67dbff0ece435d2fe702f39cc"
+checksum = "3baf9ff16e3f7a6c045c8ece8d2d7ebf4521eab92de07cc9edb11f3e9c853143"
 dependencies = [
  "miden-crypto",
  "winter-crypto",
@@ -440,11 +446,12 @@ dependencies = [
 
 [[package]]
 name = "miden-crypto"
-version = "0.6.0"
+version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9cf95db953ee5fc8ef5a1df2d2e6e55e41587861c793fa26b45a214d3cc0f798"
+checksum = "32dd571edafdd5e8947e4006a905a1c5373f2f8b08b270fea3c998db5be131cf"
 dependencies = [
  "blake3",
+ "glob",
  "winter-crypto",
  "winter-math",
  "winter-utils",
@@ -452,9 +459,9 @@ dependencies = [
 
 [[package]]
 name = "miden-verifier"
-version = "0.6.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "942b5a3302bb528f23d5960a8c4ca1ed5f12de6aed5b039e376866517a6c6f70"
+checksum = "73ff0e0cfc5f11ae757ecfde5e6ed3e7fa2afcc2ed4731f5f51d83a0851ae23d"
 dependencies = [
  "miden-air",
  "miden-core",
