@@ -73,7 +73,7 @@ pub extern "C" fn verify(){
     let program_info: ProgramInfo = ProgramInfo::read_from_bytes(&program_info_serialized).unwrap();
 
     // run verifier
-    let is_valid: Result<u32, miden_verifier::VerificationError> = miden_verifier::verify(program_info, StackInputs::try_from_values([0, 1]).unwrap(), outputs, proof);
+    let is_valid: Result<u32, miden_verifier::VerificationError> = miden_verifier::verify(program_info, StackInputs::try_from_values([1]).unwrap(), outputs, proof);
     match is_valid{
         Ok(_) => {
             
