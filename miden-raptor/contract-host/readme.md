@@ -1,0 +1,1 @@
+wasm-opt --strip-debug --signext-lowering contract.wasm

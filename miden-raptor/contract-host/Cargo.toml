@@ -1,0 +1,19 @@
+[package]
+name = "contract"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+base64 = { version = "0.13.0", default-features = false, features = ["alloc"] }
+casper-contract = { git = "https://github.com/jonas089/casper-node/", branch="miden-verifier", default-features = false, features = ["test-support"]}
+casper-types = {git = "https://github.com/jonas089/casper-node/", branch="miden-verifier"}
+[[bin]]
+name = "contract"
+path = "src/main.rs"
+bench = false
+doctest = false
+test = false
+
+[profile.release]
+codegen-units = 1
+lto = true
