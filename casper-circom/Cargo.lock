@@ -76,7 +76,7 @@ dependencies = [
 [[package]]
 name = "casper-contract"
 version = "4.0.0"
-source = "git+https://github.com/jonas089/casper-node/?branch=circom-verifier#23d8b9e41a3a980b156fa7cc5dfb6d93a3a4f46f"
+source = "git+https://github.com/jonas089/casper-node/?branch=circom-verifier#731c67d100342e40a23c6202347f1d55e0b223c2"
 dependencies = [
  "casper-types",
  "hex_fmt",
@@ -85,7 +85,7 @@ dependencies = [
 [[package]]
 name = "casper-types"
 version = "4.0.1"
-source = "git+https://github.com/jonas089/casper-node/?branch=circom-verifier#23d8b9e41a3a980b156fa7cc5dfb6d93a3a4f46f"
+source = "git+https://github.com/jonas089/casper-node/?branch=circom-verifier#731c67d100342e40a23c6202347f1d55e0b223c2"
 dependencies = [
  "base16",
  "base64",
