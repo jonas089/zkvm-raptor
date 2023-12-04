@@ -1,4 +1,5 @@
 miden-raptor/contract/target/
 miden-raptor/contract-host/target/
 miden-raptor/proving-system/target/
+casper-circom/target/
 target/

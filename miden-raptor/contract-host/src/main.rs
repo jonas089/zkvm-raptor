@@ -1,5 +1,4 @@
 #![no_main]
-#![no_std]
 
 extern crate alloc;
 use alloc::{
@@ -23,7 +22,7 @@ use error::MidenError;
 pub extern "C" fn call_verifier(){
     let response: [u8; 1] = miden::miden_verifier();
     if response == [1u8]{
-        Ok(())
+        ()
     }
     else{
         runtime::revert(MidenError::InvalidProof);

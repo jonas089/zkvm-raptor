@@ -65,9 +65,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
 
 [[package]]
+name = "casper-circom"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "casper-contract",
+ "casper-types",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "casper-contract"
 version = "4.0.0"
-source = "git+https://github.com/jonas089/casper-node/?branch=miden-verifier#b95313892d9982c763fc7870ec8f5eb42b73a8e9"
+source = "git+https://github.com/jonas089/casper-node/?branch=circom-verifier#23d8b9e41a3a980b156fa7cc5dfb6d93a3a4f46f"
 dependencies = [
  "casper-types",
  "hex_fmt",
@@ -76,7 +87,7 @@ dependencies = [
 [[package]]
 name = "casper-types"
 version = "4.0.1"
-source = "git+https://github.com/jonas089/casper-node/?branch=miden-verifier#b95313892d9982c763fc7870ec8f5eb42b73a8e9"
+source = "git+https://github.com/jonas089/casper-node/?branch=circom-verifier#23d8b9e41a3a980b156fa7cc5dfb6d93a3a4f46f"
 dependencies = [
  "base16",
  "base64",
@@ -109,15 +120,6 @@ name = "const-oid"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "28c122c3980598d243d63d9a704629a2d748d101f278052ff068be5a4423ab6f"
-
-[[package]]
-name = "contract"
-version = "0.1.0"
-dependencies = [
- "base64",
- "casper-contract",
- "casper-types",
-]
 
 [[package]]
 name = "cpufeatures"
