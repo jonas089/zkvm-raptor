@@ -71,8 +71,6 @@ dependencies = [
  "base64",
  "casper-contract",
  "casper-types",
- "serde",
- "serde_json",
 ]
 
 [[package]]
