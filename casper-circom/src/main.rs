@@ -42,17 +42,21 @@ struct CircomInput{
 #[no_mangle]
 pub extern "C" fn call_verifier(){
     let circom_input = CircomInput{
-        alpha_g1: alpha_g1,
-        beta_g2: beta_g2,
-        delta_g2: delta_g2,
-        gamma_g2: gamma_g2,
-        gamma_abc_g1: gamma_g1_abc_serialized,
-        a: a,
-        b: b,
-        c: c,
-        circuit_wasm: wasm,
-        circuit_r1cs: r1cs,
-        inputs: inputs
+        alpha_g1: alpha_g1.to_vec(),
+        beta_g2: beta_g2.to_vec(),
+        delta_g2: delta_g2.to_vec(),
+        gamma_g2: gamma_g2.to_vec(),
+        gamma_abc_g1: gamma_g1_abc_serialized.iter()
+            .map(|&slice| slice
+            .to_vec()).collect(),
+        a: a.to_vec(),
+        b: b.to_vec(),
+        c: c.to_vec(),
+        circuit_wasm: wasm.to_vec(),
+        circuit_r1cs: r1cs.to_vec(),
+        inputs: inputs.iter()
+            .map(|&(s, x)| (s.to_string(), x))
+            .collect()
     };
 
     let _result: [u8; 1] = circom_verifier(&serde_json_wasm::to_vec(&circom_input).unwrap());
