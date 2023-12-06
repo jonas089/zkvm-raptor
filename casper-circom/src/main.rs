@@ -48,7 +48,8 @@ pub extern "C" fn call_verifier(){
         gamma_g2: gamma_g2.to_vec(),
         gamma_abc_g1: gamma_g1_abc_serialized.iter()
             .map(|&slice| slice
-            .to_vec()).collect(),
+            .to_vec())
+            .collect(),
         a: a.to_vec(),
         b: b.to_vec(),
         c: c.to_vec(),
