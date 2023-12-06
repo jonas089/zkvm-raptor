@@ -55,7 +55,7 @@ pub extern "C" fn call_verifier(){
         inputs: inputs
     };
 
-    let _result: [u8; 1] = circom_verifier(serde_json_wasm::to_vec(&circom_input).as_ref());
+    let _result: [u8; 1] = circom_verifier(&serde_json_wasm::to_vec(&circom_input).unwrap());
     if _result != [1]{
         runtime::revert(CircomError::InvalidProof);
     }
