@@ -92,7 +92,89 @@ pub fn verify(
     }
 }
 
+#[test]
+fn circom_inputs_serde(){
+    let env_path_to_circuit: PathBuf = PathBuf::from("/users/chef/Desktop/zkvm-raptor/test-circom-host");    
+    // Load the WASM and R1CS for witness and proof generation
+    let cfg = CircomConfig::<Bn254>::new(
+        env_path_to_circuit.join("circom").join("multiplier").join("multiplier.wasm"),
+        env_path_to_circuit.join("circom").join("multiplier").join("multiplier.r1cs")
+    ).expect("Failed to read circuits!");
 
+    let mut builder: CircomBuilder<Bn<Config>> = CircomBuilder::new(cfg);
+    builder.push_input("a", 2); // -> under the hood does BigInt::from_bytes_le(Sign::NoSign, &inputs["a"].value));
+    builder.push_input("b", 20);
+    builder.push_input("c", 40);
+    let circom: CircomCircuit<Bn<Config>> = builder.setup();
+    let mut rng: rand::rngs::ThreadRng = rand::thread_rng();
+    let params: ProvingKey<Bn<Config>> = GrothBn::generate_random_parameters_with_reduction(circom, &mut rng).unwrap();
+    let circom: CircomCircuit<Bn<Config>> = builder.build().unwrap();
+    let proof: ark_groth16::Proof<Bn<Config>> = GrothBn::prove(&params, circom, &mut rng).unwrap();
+
+    // Verifying key
+    let mut alpha_g1_writer: Vec<u8> = Vec::new();
+    let mut beta_g2_writer: Vec<u8> = Vec::new();
+    let mut delta_g2_writer: Vec<u8> = Vec::new();
+    let mut gamma_g2_writer: Vec<u8> = Vec::new();
+    //let mut gamma_abc_g1_writer: Vec<Vec<u8>> = Vec::new();
+    let mut gamma_abc_g1_serialized: Vec<Vec<u8>> = Vec::new();
+    
+    let _ = params.clone().vk.alpha_g1.serialize_uncompressed(&mut alpha_g1_writer);
+    let _ = params.clone().vk.beta_g2.serialize_uncompressed(&mut beta_g2_writer);
+    let _ = params.clone().vk.delta_g2.serialize_uncompressed(&mut delta_g2_writer);
+    let _ = params.clone().vk.gamma_g2.serialize_uncompressed(&mut gamma_g2_writer);
+    for gamma_abc in params.clone().vk.gamma_abc_g1{
+        let mut gamma_abc_g1_writer: Vec<u8> = Vec::new();
+        let _ = gamma_abc.serialize_uncompressed(&mut gamma_abc_g1_writer);
+        gamma_abc_g1_serialized.push(gamma_abc_g1_writer);
+    };
+    // Proof
+    let mut a_writer: Vec<u8> = Vec::new();
+    let mut b_writer: Vec<u8> = Vec::new();
+    let mut c_writer: Vec<u8> = Vec::new();
+    let _ = proof.clone().a.serialize_uncompressed(&mut a_writer);
+    let _ = proof.clone().b.serialize_uncompressed(&mut b_writer);
+    let _ = proof.clone().c.serialize_uncompressed(&mut c_writer);
+    let mut inputs_serialized: Vec<(String, i32)> = Vec::new();
+    inputs_serialized.push((String::from("a"), 2));
+    inputs_serialized.push((String::from("b"), 20));
+    inputs_serialized.push((String::from("c"), 40));
+
+    let mut circuit_file_wasm = File::open(env_path_to_circuit.join("circom").join("multiplier").join("multiplier.wasm")).unwrap();
+    let mut circuit_file_r1cs = File::open(env_path_to_circuit.join("circom").join("multiplier").join("multiplier.r1cs")).unwrap();
+    let mut buffer_wasm: Vec<u8> = Vec::new();
+    let mut buffer_r1cs: Vec<u8> = Vec::new();
+    let _ = circuit_file_wasm.read_to_end(&mut buffer_wasm);
+    let _ = circuit_file_r1cs.read_to_end(&mut buffer_r1cs);
+
+    let verifier_inputs = CircomInput{
+        alpha_g1: alpha_g1_writer,
+        beta_g2: beta_g2_writer,
+        gamma_g2: gamma_g2_writer,
+        delta_g2: delta_g2_writer,
+        gamma_abc_g1: gamma_abc_g1_serialized,
+        a: a_writer,
+        b: b_writer,
+        c: c_writer,
+        circuit_wasm: buffer_wasm,
+        circuit_r1cs: buffer_r1cs,
+        inputs: inputs_serialized
+    };
+    let verifier_inputs_as_bytes: Vec<u8> = serde_json::to_vec(&verifier_inputs).unwrap();
+    println!("Alpha_g1: {:?}", &verifier_inputs.alpha_g1);
+    println!("Beta_g2: {:?}", &verifier_inputs.beta_g2);
+    println!("Delta: {:?}", &verifier_inputs.delta_g2);
+    println!("Gamma_g2: {:?}", &verifier_inputs.gamma_g2);
+    println!("Gamma_g1_abc_serialized: {:?}", &verifier_inputs.gamma_abc_g1);
+    println!("A: {:?}", &verifier_inputs.a);
+    println!("B: {:?}", &verifier_inputs.b);
+    println!("C: {:?}", &verifier_inputs.c);
+    println!("WASM: {:?}", &verifier_inputs.circuit_wasm);
+    println!("R1CS: {:?}", &verifier_inputs.circuit_r1cs);
+    println!("Inputs: {:?}", &verifier_inputs.inputs);
+    let output: [u8;1] = verify(verifier_inputs_as_bytes);
+    assert!(output == [1]);
+}
 
 
 #[test]
@@ -100,7 +182,7 @@ fn test_verify(){
     /*
         This tests only the assertion in the circuit and the construction of all proof parameters from serializable types
     */
-    let env_path_to_circuit: PathBuf = PathBuf::from("/users/chef/Desktop/test-circom-host");    
+    let env_path_to_circuit: PathBuf = PathBuf::from("/users/chef/Desktop/zkvm-raptor/test-circom-host");    
     // Load the WASM and R1CS for witness and proof generation
     let cfg = CircomConfig::<Bn254>::new(
         env_path_to_circuit.join("circom").join("multiplier").join("multiplier.wasm"),
