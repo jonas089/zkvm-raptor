@@ -8,9 +8,9 @@ use std::collections::HashMap;
 use ark_serialize::CanonicalDeserialize;
 use ark_ec::{
     bn::Bn,
-    short_weierstrass::{self as sw}
+    short_weierstrass::{self as sw}, bls12::Bls12
 };
-use ark_bn254::{Config, G1Affine, G2Affine};
+use ark_bls12_377::{Config, G1Affine, G2Affine};
 
 #[derive(Default, Clone)]
 pub struct Groth16Proof{
@@ -20,7 +20,7 @@ pub struct Groth16Proof{
 }
 
 impl Groth16Proof{
-    pub fn build(&self) -> ark_groth16::Proof<Bn<Config>>{
+    pub fn build(&self) -> ark_groth16::Proof<Bls12<Config>>{
         ark_groth16::Proof{
         a: G1Affine::deserialize_uncompressed(&*self.a).unwrap(),
         b: G2Affine::deserialize_uncompressed(&*self.b).unwrap(),
@@ -39,13 +39,13 @@ pub struct Groth16VerifyingKey{
 }
 
 impl Groth16VerifyingKey{
-    pub fn build(&self) -> ark_groth16::VerifyingKey<Bn<Config>>{
-        let alpha_g1: sw::Affine<ark_bn254::g1::Config> = G1Affine::deserialize_uncompressed(&*self.alpha_g1).unwrap();
-        let beta_g2: sw::Affine<ark_bn254::g2::Config> = G2Affine::deserialize_uncompressed(&*self.beta_g2).unwrap();
-        let gamma_g2: sw::Affine<ark_bn254::g2::Config> = G2Affine::deserialize_uncompressed(&*self.gamma_g2).unwrap();
-        let delta_g2: sw::Affine<ark_bn254::g2::Config> = G2Affine::deserialize_uncompressed(&*self.delta_g2).unwrap();
+    pub fn build(&self) -> ark_groth16::VerifyingKey<Bls12<Config>>{
+        let alpha_g1: sw::Affine<ark_bls12_377::g1::Config> = G1Affine::deserialize_uncompressed(&*self.alpha_g1).unwrap();
+        let beta_g2: sw::Affine<ark_bls12_377::g2::Config> = G2Affine::deserialize_uncompressed(&*self.beta_g2).unwrap();
+        let gamma_g2: sw::Affine<ark_bls12_377::g2::Config> = G2Affine::deserialize_uncompressed(&*self.gamma_g2).unwrap();
+        let delta_g2: sw::Affine<ark_bls12_377::g2::Config> = G2Affine::deserialize_uncompressed(&*self.delta_g2).unwrap();
 
-        let mut gamma_abc_g1: Vec<sw::Affine<ark_bn254::g1::Config>> = Vec::new();
+        let mut gamma_abc_g1: Vec<sw::Affine<ark_bls12_377::g1::Config>> = Vec::new();
         for gamma_abc in self.gamma_abc_g1.clone(){
             gamma_abc_g1.push(G1Affine::deserialize_uncompressed(&*gamma_abc).unwrap());
         };
